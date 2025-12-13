@@ -1,0 +1,326 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Portfolio Analytics - Serverless Infrastructure with API Gateway, Lambda, and S3'
+
+Resources:
+  # S3 Bucket for storing analytics data
+  AnalyticsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-analytics-bucket
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+              - HEAD
+            AllowedOrigins:
+              - !Sub https://sudhanvapaturkar.com
+            MaxAge: 3600
+
+  # Lambda Role
+  AnalyticsLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:ListBucket
+                Resource:
+                  - !GetAtt AnalyticsBucket.Arn
+                  - !Sub ${AnalyticsBucket.Arn}/*
+
+  # Lambda Function for saving analytics data
+  SaveAnalyticsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-save-analytics
+      Handler: save-analytics.handler
+      Role: !GetAtt AnalyticsLambdaRole.Arn
+      Runtime: nodejs16.x
+      Timeout: 30
+      MemorySize: 256
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref AnalyticsBucket
+          ANALYTICS_FILE: analytics-data.json
+      Code:
+        ZipFile: |
+          // Placeholder - Upload actual code after deployment
+          exports.handler = async (event) => {
+            return {
+              statusCode: 200,
+              body: JSON.stringify({ message: 'Placeholder function' })
+            };
+          };
+
+  # Lambda Function for getting analytics summary
+  GetAnalyticsSummaryFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-get-analytics-summary
+      Handler: get-analytics-summary.handler
+      Role: !GetAtt AnalyticsLambdaRole.Arn
+      Runtime: nodejs16.x
+      Timeout: 30
+      MemorySize: 256
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref AnalyticsBucket
+          ANALYTICS_FILE: analytics-data.json
+      Code:
+        ZipFile: |
+          // Placeholder - Upload actual code after deployment
+          exports.handler = async (event) => {
+            return {
+              statusCode: 200,
+              body: JSON.stringify({ message: 'Placeholder function' })
+            };
+          };
+
+  # API Gateway for analytics endpoints
+  AnalyticsAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub ${AWS::StackName}-analytics-api
+      Description: API for portfolio analytics
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  # Analytics resource
+  AnalyticsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsAPI
+      ParentId: !GetAtt AnalyticsAPI.RootResourceId
+      PathPart: 'analytics'
+
+  # Summary resource
+  SummaryResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsAPI
+      ParentId: !Ref AnalyticsResource
+      PathPart: 'summary'
+
+  # POST method for saving analytics
+  SaveAnalyticsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsAPI
+      ResourceId: !Ref AnalyticsResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SaveAnalyticsFunction.Arn}/invocations
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Headers: true
+
+  # OPTIONS method for CORS - Analytics resource
+  AnalyticsOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsAPI
+      ResourceId: !Ref AnalyticsResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Credentials: "'true'"
+            ResponseTemplates:
+              application/json: '{}'
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Credentials: true
+
+  # GET method for analytics summary
+  GetAnalyticsSummaryMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsAPI
+      ResourceId: !Ref SummaryResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAnalyticsSummaryFunction.Arn}/invocations
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Credentials: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Headers: true
+
+  # OPTIONS method for CORS - Summary resource
+  SummaryOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsAPI
+      ResourceId: !Ref SummaryResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Credentials: "'true'"
+            ResponseTemplates:
+              application/json: '{}'
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: 'Empty'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Credentials: true
+
+  # Lambda Permission for Save Analytics
+  SaveAnalyticsPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref SaveAnalyticsFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AnalyticsAPI}/*/POST/analytics
+
+  # Lambda Permission for Get Analytics Summary
+  GetAnalyticsSummaryPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GetAnalyticsSummaryFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AnalyticsAPI}/*/GET/analytics/summary
+
+  # API Key for securing endpoints
+  ApiKeyForAnalytics:
+    Type: AWS::ApiGateway::ApiKey
+    DependsOn: AnalyticsAPIDeployment
+    Properties:
+      Name: !Sub ${AWS::StackName}-portfolio-analytics-key
+      Description: API Key for portfolio analytics endpoints
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref AnalyticsAPI
+          StageName: 'prod'
+
+  # Usage Plan to control API key usage
+  UsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn: AnalyticsAPIDeployment
+    Properties:
+      Description: Usage plan for portfolio analytics API
+      ApiStages:
+        - ApiId: !Ref AnalyticsAPI
+          Stage: 'prod'
+      Throttle:
+        RateLimit: 10
+        BurstLimit: 20
+      Quota:
+        Limit: 1000
+        Period: DAY
+
+  # Associate API Key with Usage Plan
+  UsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ApiKeyForAnalytics
+      KeyType: API_KEY
+      UsagePlanId: !Ref UsagePlan
+
+  # API Gateway Deployment
+  AnalyticsAPIDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - SaveAnalyticsMethod
+      - GetAnalyticsSummaryMethod
+      - AnalyticsOptionsMethod
+      - SummaryOptionsMethod
+    Properties:
+      RestApiId: !Ref AnalyticsAPI
+      StageName: 'prod'
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL for production stage"
+    Value: !Sub https://${AnalyticsAPI}.execute-api.${AWS::Region}.amazonaws.com/prod
+  
+  AnalyticsBucketName:
+    Description: "Name of the S3 bucket for analytics data"
+    Value: !Ref AnalyticsBucket
+    
+  SaveAnalyticsFunctionName:
+    Description: "Name of the Lambda function for saving analytics"
+    Value: !Ref SaveAnalyticsFunction
+    
+  GetAnalyticsSummaryFunctionName:
+    Description: "Name of the Lambda function for getting analytics summary"
+    Value: !Ref GetAnalyticsSummaryFunction
+    
+  ApiKeyId:
+    Description: "API Key ID for accessing the analytics endpoints"
+    Value: !Ref ApiKeyForAnalytics
