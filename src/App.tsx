@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Index from "./pages/Index";
+import AIChatbot from "./components/chat-interface/AIChatbot";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -18,6 +19,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <AIChatbot />
           <BrowserRouter>
             <Suspense fallback={null}>
               <Routes>
