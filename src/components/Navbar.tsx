@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Sun, Moon, BarChart2 } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 
@@ -13,7 +13,7 @@ const navLinks = [
   { name: 'Contact', href: '#contact' },
 ];
 
-export default function Navbar({ onShowAnalytics }) {
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
@@ -23,7 +23,7 @@ export default function Navbar({ onShowAnalytics }) {
   // Handle scroll locking when menu is open
   useEffect(() => {
     const body = bodyRef.current;
-    
+
     if (isMenuOpen) {
       // Lock scroll when menu is open
       body.style.overflow = 'hidden';
@@ -31,7 +31,7 @@ export default function Navbar({ onShowAnalytics }) {
       // Restore scroll when menu is closed
       body.style.overflow = '';
     }
-    
+
     // Cleanup function to ensure scroll is restored when component unmounts
     return () => {
       body.style.overflow = '';
@@ -65,7 +65,7 @@ export default function Navbar({ onShowAnalytics }) {
 
   return (
     <>
-      <header 
+      <header
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           scrolled ? 'py-2 glass-panel' : 'py-4 bg-transparent'
@@ -73,9 +73,9 @@ export default function Navbar({ onShowAnalytics }) {
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Link to="/" className="text-xl font-mono font-bold tracking-tighter">
-            <span className="text-gradient">{ '{ ' }</span> 
-            Dharaneeshwar 
-            <span className="text-gradient">{ ' }' }</span>
+            <span className="text-gradient">{'{ '}</span>
+            Dharaneeshwar
+            <span className="text-gradient">{' }'}</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -100,19 +100,11 @@ export default function Navbar({ onShowAnalytics }) {
                 {link.name}
               </a>
             ))}
-            
-            {/* Analytics Button */}
-            {/* <button 
-              onClick={onShowAnalytics} 
-              className="nav-link flex items-center gap-1"
-              aria-label="Analytics"
-            >
-              <BarChart2 className="w-4 h-4" />
-              <span>Analytics</span>
-            </button> */}
-            
-            <button 
-              onClick={toggleTheme} 
+
+
+
+            <button
+              onClick={toggleTheme}
               className="ml-4 p-2 rounded-full hover:bg-background/80 transition-colors"
               aria-label="Toggle theme"
             >
@@ -126,8 +118,8 @@ export default function Navbar({ onShowAnalytics }) {
 
           {/* Mobile Nav Toggle */}
           <div className="flex items-center md:hidden">
-            <button 
-              onClick={toggleTheme} 
+            <button
+              onClick={toggleTheme}
               className="mr-4 p-2 rounded-full hover:bg-background/80 transition-colors"
               aria-label="Toggle theme"
             >
@@ -137,7 +129,7 @@ export default function Navbar({ onShowAnalytics }) {
                 <Moon className="w-5 h-5 text-primary" />
               )}
             </button>
-            <button 
+            <button
               onClick={toggleMenu}
               className="p-2 rounded-md hover:bg-background/80 transition-colors"
               aria-label="Toggle menu"
@@ -153,7 +145,7 @@ export default function Navbar({ onShowAnalytics }) {
         <div className="fixed inset-0 z-[9999] md:hidden" style={{ backgroundColor: theme === 'dark' ? '#0B0F19' : '#FFFFFF' }}>
           <div className="h-full flex flex-col">
             <div className="p-4 flex justify-end">
-              <button 
+              <button
                 onClick={closeMenu}
                 className="p-2 rounded-md hover:bg-background/20 transition-colors"
                 aria-label="Close menu"
@@ -167,9 +159,9 @@ export default function Navbar({ onShowAnalytics }) {
                   key={link.name}
                   href={link.href}
                   className={cn(
-                    "text-xl py-2 px-4 rounded-md transition-colors", 
-                    activeSection === link.href.slice(1) 
-                      ? "text-blue-500 font-medium" 
+                    "text-xl py-2 px-4 rounded-md transition-colors",
+                    activeSection === link.href.slice(1)
+                      ? "text-blue-500 font-medium"
                       : theme === 'dark' ? "text-gray-300" : "text-gray-700"
                   )}
                   onClick={(e) => {
@@ -190,23 +182,8 @@ export default function Navbar({ onShowAnalytics }) {
                   {link.name}
                 </a>
               ))}
-              
-              {/* Analytics Button on Mobile */}
-              {/* <button
-                className={cn(
-                  "text-xl py-2 px-4 rounded-md transition-colors flex items-center gap-2", 
-                  theme === 'dark' ? "text-gray-300" : "text-gray-700"
-                )}
-                onClick={() => {
-                  closeMenu();
-                  setTimeout(() => {
-                    onShowAnalytics();
-                  }, 100);
-                }}
-              >
-                <BarChart2 className="w-5 h-5" />
-                <span>Analytics</span>
-              </button> */}
+
+
             </div>
           </div>
         </div>
