@@ -3,7 +3,7 @@
 A personal portfolio website showcasing my professional experience, academic achievements, technical skills, and projects as a Software Engineer and Graduate Student at the University at Buffalo.
 
 ## Live Demo
-_Your live GitHub Pages URL goes here (e.g., [https://dharanee.dev//](https://dharanee.dev/))_
+[https://dharanee.dev//](https://dharanee.dev/))
 
 ## 🛠️ Built With
 This project is built using modern web development technologies, heavily optimized for speed and a lightweight bundle:
