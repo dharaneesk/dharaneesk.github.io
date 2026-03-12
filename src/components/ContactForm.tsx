@@ -83,10 +83,10 @@ export default function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="glass-panel rounded-xl p-6 bg-gradient-to-br from-accent/5 to-primary/5">
-      <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
+    <form onSubmit={handleSubmit} className="glass-panel rounded-xl p-4 sm:p-6 bg-gradient-to-br from-accent/5 to-primary/5">
+      <h3 className="text-xl sm:text-2xl font-bold mb-6">Send a Message</h3>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
           <Input
@@ -96,7 +96,7 @@ export default function ContactForm() {
             value={formData.name}
             onChange={handleChange}
             placeholder="Your name"
-            className="bg-background/50"
+            className="bg-background/50 h-10 sm:h-auto"
           />
         </div>
 
@@ -109,8 +109,8 @@ export default function ContactForm() {
             required
             value={formData.email}
             onChange={handleChange}
-            placeholder="your.email@example.com"
-            className="bg-background/50"
+            placeholder="your@email.com"
+            className="bg-background/50 h-10 sm:h-auto"
           />
         </div>
       </div>
@@ -124,7 +124,7 @@ export default function ContactForm() {
           value={formData.subject}
           onChange={handleChange}
           placeholder="What's this about?"
-          className="bg-background/50"
+          className="bg-background/50 h-10 sm:h-auto"
         />
       </div>
 
@@ -150,11 +150,11 @@ export default function ContactForm() {
         </div>
       )}
 
-      <div className="text-right">
+      <div className="flex justify-end">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-5 py-2 bg-primary text-primary-foreground rounded-lg flex items-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-70 ml-auto"
+          className="w-full sm:w-auto px-5 py-2.5 bg-primary text-primary-foreground rounded-lg flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-70"
         >
           {isSubmitting ? 'Sending...' : (
             <>

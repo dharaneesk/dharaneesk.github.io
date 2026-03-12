@@ -166,31 +166,31 @@ export default function About() {
 
   return (
     <section id="about" className="section min-h-0 h-auto w-full">
-      <div className="container mx-auto py-12 px-4">
-        <div className="mb-16 animate-on-scroll">
+      <div className="container mx-auto py-8 sm:py-12 px-4">
+        <div className="mb-10 sm:mb-16 animate-on-scroll">
           <h2 className="section-heading">About Me</h2>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           <div className="animate-on-scroll">
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
               <Briefcase className="text-primary" />
-              <h3 className="text-2xl font-bold">Work Experience</h3>
+              <h3 className="text-xl sm:text-2xl font-bold">Work Experience</h3>
             </div>
             
-            <div className="relative mt-8">
+            <div className="relative mt-4 sm:mt-8">
               {workExperience.map((job, index) => (
                 <TimelineEvent key={index} {...job} />
               ))}
             </div>
 
-            <div className="animate-on-scroll customTopPadding">
-              <div className="flex items-center gap-2 mb-6">
+            <div className="animate-on-scroll pt-8 sm:pt-12">
+              <div className="flex items-center gap-2 mb-4 sm:mb-6">
                 <Award className="text-primary" />
-                <h3 className="text-2xl font-bold">Achievements</h3>
+                <h3 className="text-xl sm:text-2xl font-bold">Achievements</h3>
               </div>
               
-              <div className="relative mt-8">
+              <div className="relative mt-4 sm:mt-8">
                 {achievements.map((achievement, index) => (
                   <TimelineEvent key={index} {...achievement} />
                 ))}
@@ -198,50 +198,45 @@ export default function About() {
             </div>
           </div>
           
-          <div>
+          <div className="space-y-8 sm:space-y-12">
             <div className="animate-on-scroll">
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-4 sm:mb-6">
                 <GraduationCap className="text-primary" />
-                <h3 className="text-2xl font-bold">Education</h3>
+                <h3 className="text-xl sm:text-2xl font-bold">Education</h3>
               </div>
               
-              <div className="relative mt-8">
+              <div className="relative mt-4 sm:mt-8">
                 {education.map((edu, index) => (
                   <TimelineEvent key={index} {...edu} />
                 ))}
               </div>
             </div>
 
-            <div className="animate-on-scroll customTopPadding">
-              <div className="flex items-center gap-2 mb-6">
+            <div className="animate-on-scroll">
+              <div className="flex items-center gap-2 mb-4 sm:mb-6">
                 <GraduationCap className="text-primary" />
-                <h3 className="text-2xl font-bold">Work Study</h3>
+                <h3 className="text-xl sm:text-2xl font-bold">Work Study</h3>
               </div>
               
-              <div className="relative mt-8">
+              <div className="relative mt-4 sm:mt-8">
                 {workStudy.map((edu, index) => (
                   <TimelineEvent key={index} {...edu} />
                 ))}
               </div>
-
-
             </div>
 
-            <div className="animate-on-scroll customTopPadding">
-              <div className="flex items-center gap-2 mb-6">
+            <div className="animate-on-scroll">
+              <div className="flex items-center gap-2 mb-4 sm:mb-6">
                 <Award className="text-primary" />
-                <h3 className="text-2xl font-bold">Certifications</h3>
+                <h3 className="text-xl sm:text-2xl font-bold">Certifications</h3>
               </div>
               
-              <div className="relative mt-8">
+              <div className="relative mt-4 sm:mt-8">
                 {certs.map((edu, index) => (
                   <TimelineEvent key={index} {...edu} />
                 ))}
               </div>
-
-
             </div>
-
           </div>
         </div>
       </div>

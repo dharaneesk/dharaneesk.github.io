@@ -214,14 +214,14 @@ export default function Hobbies() {
           <h2 className="section-heading">Hobbies !</h2>
         </div>
         
-        <div className="flex justify-center mb-10 animate-on-scroll">
-          <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 xs:grid-cols-1">
+        <div className="flex justify-center mb-6 sm:mb-10 animate-on-scroll">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full max-w-2xl px-4">
             {(Object.keys(hobbies)).map((hobby) => (
               <button
                 key={hobby}
                 onClick={() => setActiveHobby(hobby)}
                 className={cn(
-                  "glass-panel py-4 px-6 rounded-xl flex flex-col items-center gap-2 transition-all duration-300",
+                  "glass-panel py-3 px-2 sm:py-4 sm:px-6 rounded-xl flex flex-col items-center gap-1 sm:gap-2 transition-all duration-300",
                   activeHobby === hobby 
                     ? "bg-primary/10 border-primary/50" 
                     : "hover:bg-foreground/5"
@@ -229,14 +229,14 @@ export default function Hobbies() {
               >
                 <div 
                   className={cn(
-                    "p-2 rounded-full",
+                    "p-1.5 sm:p-2 rounded-full",
                     activeHobby === hobby ? "text-primary" : "text-foreground/70"
                   )}
                 >
                   {hobbies[hobby].icon}
                 </div>
                 <span className={cn(
-                  "text-sm font-medium",
+                  "text-[10px] sm:text-sm font-medium text-center",
                   activeHobby === hobby ? "text-primary" : "text-foreground/70"
                 )}>
                   {hobbies[hobby].title}

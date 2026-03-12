@@ -131,23 +131,23 @@ export default function Projects() {
 
   return (
     <section id="projects" className="section">
-      <div className="container mx-auto">
-        <div className="mb-8">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="mb-6 sm:mb-8">
           <h2 className="section-heading">My Projects</h2>
         </div>
 
         {/* Tabs */}
-        <div className="mb-10">
-          <div className="flex flex-wrap justify-center gap-2 border-b border-gray-200">
+        <div className="mb-8 sm:mb-10">
+          <div className="flex flex-wrap justify-center gap-1 sm:gap-2 border-b border-border/50">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`
-                  px-5 py-3 text-sm font-medium transition-all duration-200 ease-in-out
+                  px-3 py-2 sm:px-5 sm:py-3 text-xs sm:text-sm font-medium transition-all duration-200 ease-in-out
                   ${activeTab === tab
-                    ? 'text-blue-400 border-b-2 border-blue-400 -mb-px'
-                    : 'text-gray-400 hover:text-blue-300 dark:hover:text-white'}
+                    ? 'text-primary border-b-2 border-primary -mb-px'
+                    : 'text-muted-foreground hover:text-foreground'}
                 `}
               >
                 {tab}
@@ -157,7 +157,7 @@ export default function Projects() {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {currentProjects.length > 0 ? (
             currentProjects.map((project, index) => (
               <ProjectCard

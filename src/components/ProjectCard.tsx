@@ -59,8 +59,8 @@ export default function ProjectCard({
       <CardContent className="p-0 flex flex-col h-full">
         <div className="flex flex-col p-6 h-full">
           {/* Title section - fixed height */}
-          <div className="h-12 mb-2">              
-            <h3 className="text-2xl font-bold group flex items-center gap-2">
+          <div className="min-h-[3rem] mb-2 flex items-center">              
+            <h3 className="text-xl sm:text-2xl font-bold group flex items-center gap-2">
               {title}
               <span className="text-primary opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-[0px] transition-all duration-300">
                 <ArrowUpRight size={16} />
@@ -69,26 +69,26 @@ export default function ProjectCard({
           </div>
             
           {/* Description section - fixed height */}
-          <div className="h-20 mb-4">
-            <p className="text-foreground/70 line-clamp-3">{description}</p>
+          <div className="min-h-[5rem] mb-4">
+            <p className="text-sm sm:text-base text-foreground/70 line-clamp-3 sm:line-clamp-none">{description}</p>
           </div>
             
           {/* Technology icons section - fixed height */}
-          <div className="flex flex-wrap gap-4 mb-6 h-24">
+          <div className="flex flex-wrap gap-2 sm:gap-4 mb-6 min-h-[5rem] sm:min-h-[6rem]">
             {technologies.map((tech, index) => (
               <div key={index} className="flex flex-col items-center gap-1 transition-transform hover:scale-110 duration-300">
-                <div className="p-2 rounded-md bg-background/50 shadow-sm">
+                <div className="p-1.5 sm:p-2 rounded-md bg-background/50 shadow-sm">
                   <img 
                     src={tech.icon} 
                     alt={tech.name} 
                     className={cn(
-                      "w-6 h-6",
+                      "w-5 h-5 sm:w-6 sm:h-6",
                       // Only apply invert filter to dark icons when in dark mode
                       tech.strat === "dark" && isDarkMode && "filter invert"
                     )} 
                   />
                 </div>
-                <span className="text-xs text-foreground/70">{tech.name}</span>
+                <span className="text-[10px] sm:text-xs text-foreground/70">{tech.name}</span>
               </div>
             ))}
           </div>
@@ -127,18 +127,16 @@ export default function ProjectCard({
           </div>
           
           {/* Buttons section - fixed height */}
-          <div className="flex gap-4 mt-auto h-10">
+          <div className="flex flex-wrap gap-2 sm:gap-4 mt-auto">
             {githubUrl && (
               <a
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 border border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground rounded-full transition-all duration-300 hover:shadow-md hover:shadow-primary/20"
+                className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 border border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground rounded-full text-xs sm:text-sm transition-all duration-300 hover:shadow-md hover:shadow-primary/20"
               >
-                <Github size={16} />
-                <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary-foreground after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100">
-                  View Code
-                </span>
+                <Github size={14} className="sm:size-4" />
+                <span>View Code</span>
               </a>
             )}
             
@@ -147,12 +145,10 @@ export default function ProjectCard({
                 href={devpostUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 border border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground rounded-full transition-all duration-300 hover:shadow-md hover:shadow-primary/20"
+                className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 border border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground rounded-full text-xs sm:text-sm transition-all duration-300 hover:shadow-md hover:shadow-primary/20"
               >
-                <ExternalLink size={16} />
-                <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary-foreground after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100">
-                  View on Devpost
-                </span>
+                <ExternalLink size={14} className="sm:size-4" />
+                <span>Devpost</span>
               </a>
             )}
             
@@ -161,12 +157,10 @@ export default function ProjectCard({
                 href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full transition-all duration-300 hover:shadow-md hover:shadow-primary/20 group"
+                className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-xs sm:text-sm transition-all duration-300 hover:shadow-md hover:shadow-primary/20 group"
               >
-                <Globe size={16} className="transition-transform group-hover:rotate-12 duration-300" />
-                <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary-foreground after:transition-transform after:duration-300 group-hover:after:origin-bottom-left group-hover:after:scale-x-100">
-                  Live Demo
-                </span>
+                <Globe size={14} className="sm:size-4 transition-transform group-hover:rotate-12 duration-300" />
+                <span>Live Demo</span>
               </a>
             )}
           </div>
