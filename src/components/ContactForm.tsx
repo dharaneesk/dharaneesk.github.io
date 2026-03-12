@@ -4,6 +4,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import DOMPurify from 'dompurify';
+
+const sanitizeInput = (input) => DOMPurify.sanitize(input).trim();
 
 export default function ContactForm() {
   const { toast } = useToast();
@@ -28,13 +31,13 @@ export default function ContactForm() {
 
     // Create FormData object
     const submitFormData = new FormData();
-    
+
     // Add form fields to FormData
-    submitFormData.append('name', formData.name);
-    submitFormData.append('email', formData.email);
-    submitFormData.append('subject', formData.subject);
-    submitFormData.append('message', formData.message);
-    
+    submitFormData.append('name', sanitizeInput(formData.name));
+    submitFormData.append('email', sanitizeInput(formData.email));
+    submitFormData.append('subject', sanitizeInput(formData.subject));
+    submitFormData.append('message', sanitizeInput(formData.message));
+
     // Add your Web3Forms access key
     // This is a public key and can be used in frontend without issues.
     submitFormData.append('access_key', 'e2c25ff8-50c4-433d-a359-9d366714066f');
@@ -60,7 +63,6 @@ export default function ContactForm() {
           message: '',
         });
       } else {
-        console.log('Error', data);
         setResult(data.message);
         toast({
           title: 'Error',
@@ -69,7 +71,6 @@ export default function ContactForm() {
         });
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
       setResult('Failed to submit form');
       toast({
         title: 'Error',
@@ -84,7 +85,7 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="glass-panel rounded-xl p-6 bg-gradient-to-br from-accent/5 to-primary/5">
       <h3 className="text-2xl font-bold mb-6">Send a Message</h3>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div className="space-y-2">
           <Label htmlFor="name">Name</Label>
@@ -98,7 +99,7 @@ export default function ContactForm() {
             className="bg-background/50"
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -113,7 +114,7 @@ export default function ContactForm() {
           />
         </div>
       </div>
-      
+
       <div className="mb-4 space-y-2">
         <Label htmlFor="subject">Subject</Label>
         <Input
@@ -126,7 +127,7 @@ export default function ContactForm() {
           className="bg-background/50"
         />
       </div>
-      
+
       <div className="mb-6 space-y-2">
         <Label htmlFor="message">Message</Label>
         <Textarea
@@ -140,7 +141,7 @@ export default function ContactForm() {
           className="bg-background/50 resize-none"
         />
       </div>
-      
+
       {result && (
         <div className="mb-4 text-sm font-medium">
           <p className={result.includes('Success') ? "text-green-500" : "text-red-500"}>
@@ -148,7 +149,7 @@ export default function ContactForm() {
           </p>
         </div>
       )}
-      
+
       <div className="text-right">
         <button
           type="submit"
