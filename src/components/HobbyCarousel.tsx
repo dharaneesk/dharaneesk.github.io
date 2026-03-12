@@ -88,7 +88,7 @@ export default function HobbyCarousel({
     <div className="relative w-full animate-on-scroll">
       {/* Main carousel container */}
       <div 
-        className="relative w-full rounded-xl overflow-hidden aspect-video max-w-4xl mx-auto"
+        className="relative w-full rounded-xl overflow-hidden aspect-[4/5] sm:aspect-video max-w-4xl mx-auto"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

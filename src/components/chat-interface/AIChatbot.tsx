@@ -149,7 +149,7 @@ export default function AIChatbot() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 50, scale: 0.9 }}
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                        className="fixed bottom-6 right-6 z-50 w-[400px] sm:w-[450px] h-[550px] max-h-[80vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl bg-background/80 border border-border"
+                        className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 w-auto sm:w-[400px] md:w-[450px] h-[500px] sm:h-[600px] max-h-[85vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl bg-background/80 border border-border"
                     >
                         <div className="flex items-center justify-between p-4 bg-primary/10 border-b border-border/50">
                             <div className="flex items-center gap-3">
@@ -203,12 +203,12 @@ export default function AIChatbot() {
                                             Yo! This is Dharaneeshwar's AI assistant. Ask me anything about his work, projects, or background!
                                         </p>
                                     </div>
-                                    <div className="grid grid-cols-1 gap-2 w-full pt-4">
+                                    <div className="grid grid-cols-2 gap-2 w-full pt-4">
                                         {SUGGESTED_QUESTIONS.map((q) => (
                                             <button
                                                 key={q}
                                                 onClick={() => handleSuggestionClick(q)}
-                                                className="text-left px-4 py-2.5 text-xs font-medium rounded-xl border border-border bg-background hover:bg-primary/5 hover:border-primary/50 transition-all active:scale-[0.98] text-foreground/80 hover:text-primary"
+                                                className="text-left px-3 py-2 text-[11px] font-medium rounded-xl border border-border bg-background hover:bg-primary/5 hover:border-primary/50 transition-all active:scale-[0.98] text-foreground/80 hover:text-primary min-h-[44px] flex items-center"
                                             >
                                                 {q}
                                             </button>
@@ -243,7 +243,7 @@ export default function AIChatbot() {
                                                 {isUser ? <User size={14} /> : <Bot size={14} />}
                                             </div>
                                             <div
-                                                className={`px-4 py-2.5 text-[13px] leading-relaxed break-words ${isUser
+                                                className={`px-3 sm:px-4 py-2 sm:py-2.5 text-[12px] sm:text-[13px] leading-relaxed break-words ${isUser
                                                     ? "bg-primary text-primary-foreground rounded-2xl rounded-tr-sm"
                                                     : "bg-muted border border-border/50 rounded-2xl rounded-tl-sm"
                                                     }`}
