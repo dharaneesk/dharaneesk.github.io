@@ -1,16 +1,17 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { ThemeContext } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'About', href: '#about' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Hobbies', href: '#hobbies' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: '/#home', isRoute: false },
+  { name: 'About', href: '/#about', isRoute: false },
+  { name: 'Blog', href: '/#blog', isRoute: false },
+  { name: 'Projects', href: '/#projects', isRoute: false },
+  { name: 'Skills', href: '/#skills', isRoute: false },
+  { name: 'Hobbies', href: '/#hobbies', isRoute: false },
+  { name: 'Contact', href: '/#contact', isRoute: false },
 ];
 
 export default function Navbar() {
@@ -19,6 +20,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const bodyRef = useRef(document.body);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Handle scroll locking when menu is open
   useEffect(() => {
@@ -80,26 +83,55 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className={cn("nav-link", activeSection === link.href.slice(1) && "active")}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const href = link.href.slice(1);
-                  const element = document.getElementById(href);
-                  if (element) {
-                    window.scrollTo({
-                      top: element.offsetTop - 80,
-                      behavior: 'smooth',
-                    });
-                  }
-                }}
-              >
-                {link.name}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              if (link.isRoute) {
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className={cn("nav-link", window.location.pathname === link.href && "active")}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              }
+              
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className={cn("nav-link", activeSection === link.href.split('#')[1] && location.pathname === '/' && "active")}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const href = link.href.split('#')[1];
+                    if (location.pathname !== '/') {
+                      navigate('/');
+                      setTimeout(() => {
+                        const element = document.getElementById(href);
+                        if (element) {
+                          window.scrollTo({
+                            top: element.offsetTop - 80,
+                            behavior: 'smooth',
+                          });
+                        }
+                      }, 100);
+                    } else {
+                      if (href) {
+                        const element = document.getElementById(href);
+                        if (element) {
+                          window.scrollTo({
+                            top: element.offsetTop - 80,
+                            behavior: 'smooth',
+                          });
+                        }
+                      }
+                    }
+                  }}
+                >
+                  {link.name}
+                </a>
+              );
+            })}
 
 
 
@@ -154,34 +186,70 @@ export default function Navbar() {
               </button>
             </div>
             <div className="flex-1 flex flex-col items-center justify-center space-y-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className={cn(
-                    "text-xl py-2 px-4 rounded-md transition-colors",
-                    activeSection === link.href.slice(1)
-                      ? "text-blue-500 font-medium"
-                      : theme === 'dark' ? "text-gray-300" : "text-gray-700"
-                  )}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const href = link.href.slice(1);
-                    const element = document.getElementById(href);
-                    if (element) {
+              {navLinks.map((link) => {
+                if (link.isRoute) {
+                  return (
+                     <Link
+                      key={link.name}
+                      to={link.href}
+                      className={cn(
+                        "text-xl py-2 px-4 rounded-md transition-colors",
+                        window.location.pathname === link.href
+                          ? "text-blue-500 font-medium"
+                          : theme === 'dark' ? "text-gray-300" : "text-gray-700"
+                      )}
+                      onClick={closeMenu}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                }
+                
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className={cn(
+                      "text-xl py-2 px-4 rounded-md transition-colors",
+                      activeSection === link.href.split('#')[1] && location.pathname === '/'
+                        ? "text-blue-500 font-medium"
+                        : theme === 'dark' ? "text-gray-300" : "text-gray-700"
+                    )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const href = link.href.split('#')[1];
                       closeMenu();
-                      setTimeout(() => {
-                        window.scrollTo({
-                          top: element.offsetTop - 80,
-                          behavior: 'smooth',
-                        });
-                      }, 100);
-                    }
-                  }}
-                >
-                  {link.name}
-                </a>
-              ))}
+                      
+                      if (location.pathname !== '/') {
+                        navigate('/');
+                        setTimeout(() => {
+                          const element = document.getElementById(href);
+                          if (element) {
+                            window.scrollTo({
+                              top: element.offsetTop - 80,
+                              behavior: 'smooth',
+                            });
+                          }
+                        }, 100);
+                      } else {
+                        if (href) {
+                          const element = document.getElementById(href);
+                          if (element) {
+                            setTimeout(() => {
+                              window.scrollTo({
+                                top: element.offsetTop - 80,
+                                behavior: 'smooth',
+                              });
+                            }, 100);
+                          }
+                        }
+                      }
+                    }}
+                  >
+                    {link.name}
+                  </a>
+                );
+              })}
 
 
             </div>
