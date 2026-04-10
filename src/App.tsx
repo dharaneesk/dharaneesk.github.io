@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import AIChatbot from "./components/chat-interface/AIChatbot";
 
 const NotFound = lazy(() => import("./pages/NotFound"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => {
             <Suspense fallback={null}>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

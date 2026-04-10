@@ -134,10 +134,12 @@ export default function AIChatbot() {
                         onClick={() => {
                             setIsOpen(true);
                         }}
-                        className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 group"
                         aria-label="Open AI Chatbot"
                     >
-                        <Bot size={28} />
+                        <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-primary shadow-sm z-10" />
+                        <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-green-500 rounded-full animate-ping opacity-75" />
+                        <Bot size={28} className="relative z-0 group-hover:scale-110 transition-transform" />
                     </motion.button>
                 )}
             </AnimatePresence>

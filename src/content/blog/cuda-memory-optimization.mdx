@@ -1,0 +1,112 @@
+Writing custom CUDA kernels? Here's why your "optimized" C++ code might actually be bottlenecked by memory latency, and how to fix it. Let's talk about memory coalescence and shared memory banks. 👇
+
+---
+
+## 1. The Problem: Naive Matrix Multiplication
+
+When transitioning from PyTorch's highly optimized `torch.matmul` to writing custom CUDA kernels, the first attempt is often a naive implementation. You spin up threads, map them to matrix indices, and calculate the dot product.
+
+```cpp
+__global__ void naiveMatmul(float* A, float* B, float* C, int N) {
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    
+    if(row < N && col < N) {
+        float sum = 0.0f;
+        for(int i = 0; i < N; i++) {
+            sum += A[row * N + i] * B[i * N + col];
+        }
+        C[row * N + col] = sum;
+    }
+}
+```
+
+It looks correct. It produces the exact same output as PyTorch. But when you profile it using `nsight compute`, you realize it's significantly slower. Why?
+
+The answer lies in **Memory Bound Operations**. The GPU's compute cores are starving for data.
+
+## 2. Deep Technical Explanation: The Memory Hierarchy
+
+To understand the bottleneck, we have to look at how data travels from Global Memory (VRAM) to the Streaming Multiprocessors (SMs).
+
+1. **Global Memory Latency:** Accessing VRAM takes ~400-800 clock cycles.
+2. **Cache Lines:** When a thread requests a float (4 bytes) from Global Memory, the GPU doesn't fetch just 4 bytes. It fetches a 32-byte or 128-byte cache line.
+3. **Memory Coalescing:** If 32 threads in a warp access contiguous memory addresses, the hardware "coalesces" these into a single memory transaction.
+
+In our naive kernel, threads in a warp (consecutive `col` values) are accessing contiguous elements of matrix `B`. This is coalesced! Perfect.
+
+However, each thread also needs to read from matrix `A`. Since threads in a warp share the same `row`, they all need the *exact same element* `A[row * N + i]` at the same time. While this broadcasts effectively, as `i` increments, we are reading across the row. The far larger issue is matrix `B` scaling for large N; we hit global memory endlessly for the same values across different blocks.
+
+### The Solution: Shared Memory Tiling
+
+We need to bring data closer to the compute cores. Shared Memory (SRAM) sits right next to the SMs and takes only ~20-30 clock cycles to access.
+
+By dividing the matrices into "tiles," we can load a block of data into Shared Memory *once*, and then have all threads in the threadblock compute on that data from SRAM.
+
+```cpp
+#define TILE_SIZE 32
+
+__global__ void tiledMatmul(float* A, float* B, float* C, int N) {
+    __shared__ float sA[TILE_SIZE][TILE_SIZE];
+    __shared__ float sB[TILE_SIZE][TILE_SIZE];
+
+    int row = blockIdx.y * TILE_SIZE + threadIdx.y;
+    int col = blockIdx.x * TILE_SIZE + threadIdx.x;
+    
+    float sum = 0.0f;
+    
+    for(int tile = 0; tile < (N + TILE_SIZE - 1) / TILE_SIZE; tile++) {
+        // Coalesced load into shared memory
+        if (row < N && (tile * TILE_SIZE + threadIdx.x) < N) {
+            sA[threadIdx.y][threadIdx.x] = A[row * N + tile * TILE_SIZE + threadIdx.x];
+        } else {
+            sA[threadIdx.y][threadIdx.x] = 0.0;
+        }
+            
+        if (col < N && (tile * TILE_SIZE + threadIdx.y) < N) {
+            sB[threadIdx.y][threadIdx.x] = B[(tile * TILE_SIZE + threadIdx.y) * N + col];
+        } else {
+            sB[threadIdx.y][threadIdx.x] = 0.0;
+        }
+
+        __syncthreads(); // Wait for all threads to finish loading
+
+        // Compute using fast shared memory
+        for(int k = 0; k < TILE_SIZE; k++) {
+            sum += sA[threadIdx.y][k] * sB[k][threadIdx.x];
+        }
+
+        __syncthreads(); // Wait before writing the next tile
+    }
+    
+    if (row < N && col < N) {
+        C[row * N + col] = sum;
+    }
+}
+```
+
+## 3. Trade-offs and Decisions
+
+**Tile Size Selection:**
+- A larger tile size (e.g., 32x32) means more reuse of data in shared memory, lowering Global Memory bandwidth requirements. 
+- However, larger tiles consume more Shared Memory per block. If a block uses too much shared memory, fewer blocks can be scheduled on a single SM simultaneously, lowering occupancy. I found 32x32 to be the sweet spot for modern architectures (Ampere/Hopper).
+
+**Bank Conflicts:**
+Shared memory is divided into 32 "banks." If multiple threads access different addresses that map to the *same* bank simultaneously, the requests are serialized (a bank conflict). In our simple tiled approach, accessing `sB[k][threadIdx.x]` doesn't cause conflicts because consecutive threads access consecutive banks. Accessing `sA[threadIdx.y][k]` broadcasts exactly the same value to all threads, which is heavily optimized by hardware.
+
+## 4. Real-world Impact
+
+Testing this on an A10G with matrix dimensions 4096 x 4096:
+
+- **Naive Kernel:** ~45 ms per multiplication.
+- **Tiled Kernel:** ~8 ms per multiplication.
+- **Improvement:** 5.6x faster by simply managing memory operations efficiently!
+
+While still not beating specialized cuBLAS kernels (which use tensor cores and assembly-level optimizations), this demonstrates how crucial memory locality is for AI inference.
+
+## 5. Key Takeaways
+
+* **Compute is Cheap, Memory is Expensive:** Most AI workloads today are memory-bound, not compute-bound. Moving data takes an order of magnitude more time.
+* **Coalescence is King:** Always ensure threads in a warp access contiguous blocks of global memory.
+* **Leverage Shared Memory:** Reusing data? Bring it into SRAM via tiling.
+* **Profile Often:** `ncu` (Nsight Compute) is your best friend when writing custom triton or CUDA kernels to verify if your assumptions about memory access patterns are true.

@@ -32,42 +32,45 @@ export default function Skills() {
   const skills: {
     languages: Skill[];
     frameworks: Skill[];
-    databases: Skill[];
-    other: Skill[];
+    cloud: Skill[];
+    ml: Skill[];
   } = {
     languages: [
-      { name: 'Java', icon: 'https://cdn.worldvectorlogo.com/logos/java-4.svg' },
       { name: 'Python', icon: 'https://cdn.worldvectorlogo.com/logos/python-5.svg' },
+      { name: 'Java', icon: 'https://cdn.worldvectorlogo.com/logos/java-4.svg' },
+      { name: 'JavaScript', icon: 'https://cdn.worldvectorlogo.com/logos/javascript-1.svg' },
+      { name: 'Go', icon: 'https://cdn.simpleicons.org/go' },
+      { name: 'TypeScript', icon: 'https://cdn.simpleicons.org/typescript' },
       { name: 'C++', icon: 'https://cdn.worldvectorlogo.com/logos/c.svg' },
-      { name: 'JS', icon: 'https://cdn.worldvectorlogo.com/logos/javascript-1.svg' },
-      { name: 'HTML', icon: 'https://cdn.worldvectorlogo.com/logos/html-1.svg' },
-      { name: 'CSS', icon: 'https://cdn.worldvectorlogo.com/logos/css-3.svg' },
+      { name: 'SQL', icon: 'https://cdn.simpleicons.org/mysql' },
     ],
     frameworks: [
       { name: 'Spring Boot', icon: 'https://cdn.worldvectorlogo.com/logos/spring-3.svg' },
-      { name: 'Pytorch', icon: 'https://cdn.worldvectorlogo.com/logos/pytorch-2.svg', strat: 'dark'  },
-      { name: 'LangChain', icon: 'https://cdn.worldvectorlogo.com/logos/langchain-1.svg', strat: 'dark'  },
-      { name: 'TensorFlow', icon: 'https://cdn.worldvectorlogo.com/logos/tensorflow-2.svg', strat: 'dark'  },
-      { name: 'OpenCV', icon: 'icons/opencv.png' },
-      { name: 'ReactJS', icon: 'https://cdn.worldvectorlogo.com/logos/react-2.svg' },
       { name: 'AngularJS', icon: 'https://cdn.worldvectorlogo.com/logos/angular-icon-1.svg' },
+      { name: 'React', icon: 'https://cdn.worldvectorlogo.com/logos/react-2.svg' },
       { name: 'NodeJS', icon: 'https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg' },
+      { name: 'gRPC', icon: 'https://cdn.simpleicons.org/google' },
+      { name: 'GraphQL', icon: 'https://cdn.simpleicons.org/graphql' },
+      { name: 'Kafka', icon: 'https://cdn.simpleicons.org/apachekafka', strat: 'dark' },
+      { name: 'RabbitMQ', icon: 'https://cdn.simpleicons.org/rabbitmq' },
     ],
-    databases: [
-      { name: 'MySql', icon: 'https://cdn.worldvectorlogo.com/logos/mysql-logo-pure.svg' },
-      { name: 'Oracle', icon: 'https://cdn.worldvectorlogo.com/logos/oracle-6.svg' },
-      { name: 'MongoDB', icon: 'https://cdn.worldvectorlogo.com/logos/mongodb-icon-1.svg' },
-      { name: 'Amazon S3', icon: 'https://cdn.worldvectorlogo.com/logos/amazon-s3.svg', strat: 'dark' },
-    ],
-    other: [
-      { name: 'Agile', icon: 'https://cdn.worldvectorlogo.com/logos/agile-software.svg', strat: 'dark' },
+    cloud: [
       { name: 'AWS', icon: 'https://cdn.worldvectorlogo.com/logos/aws-2.svg', strat: 'dark' },
-      { name: 'Jira', icon: 'https://cdn.worldvectorlogo.com/logos/jira-1.svg' },
-      { name: 'Git', icon: 'https://cdn.worldvectorlogo.com/logos/git-icon.svg' },
-      { name: 'Jenkins', icon: 'https://cdn.worldvectorlogo.com/logos/jenkins-1.svg' },
       { name: 'Openshift', icon: 'https://cdn.worldvectorlogo.com/logos/openshift.svg' },
       { name: 'Docker', icon: 'https://cdn.worldvectorlogo.com/logos/docker-4.svg' },
-      { name: 'Splunk', icon: 'https://cdn.worldvectorlogo.com/logos/splunk.svg' , strat: 'dark' },
+      { name: 'Kubernetes', icon: 'https://cdn.simpleicons.org/kubernetes' },
+      { name: 'Jenkins', icon: 'https://cdn.worldvectorlogo.com/logos/jenkins-1.svg' },
+      { name: 'Helm', icon: 'https://cdn.simpleicons.org/helm', strat: 'dark' },
+      { name: 'ArgoCD', icon: 'https://cdn.simpleicons.org/argo' },
+      { name: 'Terraform', icon: 'https://cdn.simpleicons.org/terraform' },
+    ],
+    ml: [
+      { name: 'PyTorch', icon: 'https://cdn.worldvectorlogo.com/logos/pytorch-2.svg', strat: 'dark' },
+      { name: 'LangChain', icon: 'https://cdn.simpleicons.org/langchain', strat: 'dark' },
+      { name: 'LangGraph', icon: 'https://cdn.simpleicons.org/langgraph', strat: 'dark' },
+      { name: 'CrewAI', icon: 'https://cdn.simpleicons.org/crewai', strat: 'dark' },
+      { name: 'Ray Serve', icon: 'https://cdn.simpleicons.org/ray' },
+      { name: 'BentoML', icon: 'https://cdn.simpleicons.org/bentoml', strat: 'dark' },
     ],
   };
 
@@ -77,12 +80,12 @@ export default function Skills() {
         <div className="mb-12 md:mb-16 animate-on-scroll">
           <h2 className="section-heading">Skills</h2>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <SkillCategory title="Languages" skills={skills.languages} delay={100} />
           <SkillCategory title="Frameworks" skills={skills.frameworks} delay={200} />
-          <SkillCategory title="Databases" skills={skills.databases} delay={300} />
-          <SkillCategory title="Other" skills={skills.other} delay={400} />
+          <SkillCategory title="Cloud & Infra" skills={skills.cloud} delay={300} />
+          <SkillCategory title="ML / AI" skills={skills.ml} delay={400} />
         </div>
       </div>
     </section>
