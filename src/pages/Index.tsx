@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
-import Blog from '@/components/Blog';
+// import Blog from '@/components/Blog';
 import Projects from '@/components/Projects';
 import Skills from '@/components/Skills';
 import Hobbies from '@/components/Hobbies';
@@ -40,7 +40,10 @@ const Index = () => {
       <main>
         <Hero />
         <About />
-        <Blog />
+
+        {/* Blog section disabled for deployment */}
+        {/* <Blog /> */}
+
         <Projects />
         <Skills />
         <Hobbies />

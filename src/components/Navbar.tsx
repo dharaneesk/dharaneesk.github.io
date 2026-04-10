@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { name: 'Home', href: '/#home', isRoute: false },
   { name: 'About', href: '/#about', isRoute: false },
-  { name: 'Blog', href: '/#blog', isRoute: false },
+  // { name: 'Blog', href: '/#blog', isRoute: false },
   { name: 'Projects', href: '/#projects', isRoute: false },
   { name: 'Skills', href: '/#skills', isRoute: false },
   { name: 'Hobbies', href: '/#hobbies', isRoute: false },

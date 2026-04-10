@@ -36,6 +36,7 @@ export default function Projects() {
         { name: 'FastAPI', icon: 'https://cdn.worldvectorlogo.com/logos/fastapi.svg' },
       ],
       categories: ['AI/Machine Learning', 'Gen AI/LLMs'],
+      githubUrl: 'https://github.com/dharaneesk/Intro-to-DL-Projects/tree/main/Summarizer%20Pipeline',
     },
     {
       title: 'Capsule Networks on CIFAR-10',
@@ -46,6 +47,7 @@ export default function Projects() {
         { name: 'Deep Learning', icon: 'https://cdn.worldvectorlogo.com/logos/python-5.svg' },
       ],
       categories: ['AI/Machine Learning'],
+      githubUrl: 'https://github.com/dharaneesk/Intro-to-DL-Projects/tree/main/Capsule%20Networks%20'
     },
     {
       title: 'Automation of Visual Inspection',
@@ -56,6 +58,8 @@ export default function Projects() {
         { name: 'OpenCV', icon: 'icons/opencv.png' }
       ],
       categories: ['AI/Machine Learning'],
+      devpostUrl: 'https://drive.google.com/file/d/1slkk2z9arG9x0Vy29BNFR5OzwkAxe55A/view?usp=sharing'
+
     },
     {
       title: 'Sentiment LSTM',
@@ -66,6 +70,7 @@ export default function Projects() {
         { name: 'LSTM', icon: 'https://cdn.worldvectorlogo.com/logos/python-5.svg' },
       ],
       categories: ['AI/Machine Learning'],
+      githubUrl: 'https://github.com/dharaneesk/Intro-to-DL-Projects/tree/main/Various%20Model%20Architectures'
     },
     {
       title: 'TimeSeries LSTM',
@@ -76,6 +81,7 @@ export default function Projects() {
         { name: 'Time Series', icon: 'https://cdn.worldvectorlogo.com/logos/python-5.svg' },
       ],
       categories: ['AI/Machine Learning'],
+      githubUrl: 'https://github.com/dharaneesk/Intro-to-DL-Projects/tree/main/Various%20Model%20Architectures'
     },
     {
       title: 'DeepGrad',
@@ -86,6 +92,7 @@ export default function Projects() {
         { name: 'Pytorch', icon: 'https://cdn.worldvectorlogo.com/logos/pytorch-2.svg', strat: 'dark' },
       ],
       categories: ['AI/Machine Learning'],
+      githubUrl: 'https://github.com/dharaneesk/Intro-to-DL-Projects/tree/main/Various%20Model%20Architectures'
     },
     {
       title: 'Vision Net',
@@ -96,10 +103,11 @@ export default function Projects() {
         { name: 'ResNet', icon: 'https://cdn.worldvectorlogo.com/logos/pytorch-2.svg', strat: 'dark' },
       ],
       categories: ['AI/Machine Learning'],
+      githubUrl: 'https://github.com/dharaneesk/Intro-to-DL-Projects/tree/main/Various%20Model%20Architectures'
     },
     {
       title: 'Discord Automation Bot',
-      description: 'Built an automation bot to streamline digital asset downloads and cloud storage, significantly reducing manual effort through scalable automation.',
+      description: 'Built an automation bot to streamline digital asset downloads and cloud storage, significantly reducing manual effort through scalable automation. Built as part of Graphique.',
       image: 'images/project/discord.avif',
       technologies: [
         { name: 'Node.js', icon: 'https://cdn.worldvectorlogo.com/logos/nodejs-icon.svg' },
@@ -107,6 +115,7 @@ export default function Projects() {
         { name: 'AWS', icon: 'https://cdn.worldvectorlogo.com/logos/aws-2.svg', strat: 'dark' },
       ],
       categories: ['Fullstack', 'Cloud'],
+
     },
   ];
 
